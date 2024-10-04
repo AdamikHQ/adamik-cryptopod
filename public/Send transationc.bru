@@ -1,0 +1,23 @@
+meta {
+  name: Send transationc
+  type: http
+  seq: 4
+}
+
+post {
+  url: /users/:id/transaction
+  body: json
+  auth: none
+}
+
+params:path {
+  id: alfred
+}
+
+body:json {
+  {
+    "recipient": "0x0",
+    "amount": 10,
+    "chainId": "ethereum"
+  }
+}

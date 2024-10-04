@@ -1,0 +1,85 @@
+openapi: 3.0.0
+info:
+  title: hackdamik
+  version: 1.0.0
+paths:
+  /users/:id/balances:
+    get:
+      summary: Get user's balances
+      operationId: registerUser
+      x-eov-operation-handler: users
+      description: ''
+      tags:
+        - ''
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: id
+          in: query
+          description: ''
+          required: true
+          example: alfred
+  /users:
+    post:
+      summary: Register user
+      operationId: RegisterUser
+      description: ''
+      tags:
+        - ''
+      responses:
+        '200':
+          description: ''
+      requestBody:
+        $ref: '#/components/requestBodies/register_user'
+  /users/:id/transaction:
+    post:
+      summary: Send transationc
+      operationId: SendTransaction
+      description: ''
+      tags:
+        - ''
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: id
+          in: query
+          description: ''
+          required: true
+          example: alfred
+      requestBody:
+        $ref: '#/components/requestBodies/send_transationc'
+servers: []
+components:
+  schemas:
+    register_user:
+      type: object
+      properties:
+        id:
+          type: string
+    send_transationc:
+      type: object
+      properties:
+        recipient:
+          type: string
+        amount:
+          type: number
+        chainId:
+          type: string
+  requestBodies:
+    register_user:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/register_user'
+      description: ''
+      required: true
+    send_transationc:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/send_transationc'
+      description: ''
+      required: true
+  securitySchemes: {}

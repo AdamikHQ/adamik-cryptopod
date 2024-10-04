@@ -1,0 +1,15 @@
+meta {
+  name: Get user's balances
+  type: http
+  seq: 3
+}
+
+get {
+  url: /users/:id/balances
+  body: none
+  auth: none
+}
+
+params:path {
+  id: alfred
+}
