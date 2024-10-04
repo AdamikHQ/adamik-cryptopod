@@ -1,43 +1,17 @@
 {
   "compilerOptions": {
-    "allowJs": false,
-    "downlevelIteration": true,
+    "module": "commonjs",
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "incremental": true,
-    "jsx": "preserve",
-    "lib": ["dom", "dom.iterable", "es2020"],
-    "module": "es2020",
-    "moduleResolution": "bundler",
-    "noEmit": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es6",
     "noImplicitAny": true,
-    "noImplicitThis": true,
-    "pretty": true,
-    "resolveJsonModule": true,
-    "rootDir": ".",
-    "baseUrl": "./",
-    "skipLibCheck": true,
+    "moduleResolution": "node",
     "sourceMap": true,
-    "strict": true,
-    "target": "es2020",
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "outDir": "dist",
+    "baseUrl": ".",
     "paths": {
-      "~/*": ["./src/*"]
+      "*": ["node_modules/*", "src/types/*"]
     }
   },
-  "ts-node": {
-    // these options are overrides used only by ts-node
-    // same as the --compilerOptions flag and the TS_NODE_COMPILER_OPTIONS environment variable
-    "compilerOptions": {
-      "module": "commonjs"
-    },
-    "require": ["tsconfig-paths/register"]
-  },
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": ["./src/**/*"]
 }
