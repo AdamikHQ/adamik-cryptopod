@@ -11,14 +11,15 @@
     "add-build": "git add dist"
   },
   "pre-commit": [
-      "ts.check",
-      "build",
-      "add-build"
+    "ts.check",
+    "build",
+    "add-build"
   ],
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fireblocks/ts-sdk": "^4.0.0",
     "@narval-xyz/armory-sdk": "^0.8.3",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",

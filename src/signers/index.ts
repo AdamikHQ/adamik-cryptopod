@@ -1,4 +1,5 @@
 import { NarvalSigner } from "./narval";
+import { FireblocksSigner } from "./fireblocks";
 
 export type SIGNER = "fireblocks" | "narval";
 
@@ -9,12 +10,6 @@ export interface Signer {
 }
 
 export const SIGNERS: Record<SIGNER, Signer> = {
-  fireblocks: {
-    name: "fireblocks",
-    registerNewWallet(chainId: string): Promise<string> {
-      // TODO
-      return Promise.resolve("fireblocks_wallet_id");
-    },
-  },
+  fireblocks: new FireblocksSigner(),
   narval: new NarvalSigner(),
 };

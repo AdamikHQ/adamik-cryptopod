@@ -24,7 +24,7 @@ type Wallet = {
 };
 
 const WALLETS_SIGNERS: Record<string, SIGNER> = {
-  ethereum: "narval",
+  ethereum: "fireblocks",
 };
 
 app.post("/users", async (req, res) => {
