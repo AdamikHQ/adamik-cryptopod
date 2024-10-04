@@ -27,11 +27,12 @@ const WALLETS_SIGNERS: Record<string, SIGNER> = {
   ethereum: "narval",
 };
 
-app.post("/users", (req, res) => {
+app.post("/users", async (req, res) => {
   const chainId = "ethereum"; // TODO, go through all supported chains
   const signerName = WALLETS_SIGNERS[chainId];
   const signer = SIGNERS[signerName];
-  signer.registerNewWallet(req.body.chainId);
+  await signer.registerNewWallet(req.body.chainId);
+  res.send("User registered!");
 });
 
 export default app;
