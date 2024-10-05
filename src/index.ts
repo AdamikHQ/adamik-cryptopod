@@ -2,6 +2,7 @@ import "dotenv/config";
 
 import express from "express";
 import { SIGNERS, type SIGNER } from "./signers";
+import { prisma } from "./prisma_client";
 
 const app = express();
 
@@ -16,8 +17,6 @@ app.get("/users", (req, res) => {
   res.send("Hello World!");
 });
 
-const userId = "test_user_id"; // FIXME Get from request instead
-
 // Input request body
 type Wallet = {
   chainId: string;
@@ -29,10 +28,49 @@ const WALLETS_SIGNERS: Record<string, SIGNER> = {
 
 app.post("/users", async (req, res) => {
   const chainId = "ethereum"; // TODO, go through all supported chains
+  const userId = req.body.id;
+
+  // Check if user exists
+  const user = await prisma.user.findUnique({
+    where: {
+      userName: userId,
+    },
+    include: {
+      Wallet: true,
+    },
+  });
+
+  if (user) {
+    res.status(400).send(`User ${userId} already exists`);
+    return;
+  }
+
   const signerName = WALLETS_SIGNERS[chainId];
   const signer = SIGNERS[signerName];
-  await signer.registerNewWallet(req.body.chainId);
-  res.send("User registered!");
+  const wallets = await signer.registerUser(userId);
+  for (const wallet of wallets) {
+    const user = await prisma.user.create({
+      data: {
+        userName: userId,
+        Wallet: {
+          create: {
+            provider: signerName,
+            address: wallet.address,
+            chainId: wallet.chainId,
+            remote_id: wallet.walletId,
+          },
+        },
+      },
+      include: {
+        Wallet: true,
+      },
+    });
+    console.log(
+      `wallet ${user.Wallet[0].id} with address ${user.Wallet[0].address} registered for user ${user.userName} for chain ${user.Wallet[0].chainId}`,
+    );
+  }
+
+  res.send(`User ${userId} registered`);
 });
 
 export default app;

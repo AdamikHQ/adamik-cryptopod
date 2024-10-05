@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "watch": "nodemon src/index.ts",
+    "postinstall": "prisma generate",
+    "watch": "tcs -w",
     "start": "vercel dev",
     "build": "rimraf dist && tsc",
     "ts.check": "tsc --project tsconfig.json",
@@ -21,10 +22,12 @@
   "dependencies": {
     "@fireblocks/ts-sdk": "^4.0.0",
     "@narval-xyz/armory-sdk": "^0.8.3",
+    "@prisma/client": "^5.20.0",
+    "@vercel/postgres": "^0.10.0",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
     "uuid": "^10.0.0",
-    "viem": "^2.21.17"
+    "viem": "^2.21.18"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",

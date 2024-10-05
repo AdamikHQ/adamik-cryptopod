@@ -12,24 +12,27 @@ export class FireblocksSigner implements Signer {
     });
   }
 
-  private async run() {
-    try {
-      const vault = await this.instance.vaults.createVaultAccount({
-        createVaultAccountRequest: {
-          name: "Vault Account",
-          hiddenOnUI: false,
-          autoFuel: false,
-        },
-      });
-      console.log("fireblocks - created vault");
-      return vault;
-    } catch (e) {
-      console.log(e);
+  public async registerUser(
+    chainId: string,
+  ): Promise<{ walletId: string; address: string; chainId: string }[]> {
+    const vault = await this.instance.vaults.createVaultAccount({
+      createVaultAccountRequest: {
+        name: "Vault Account",
+        hiddenOnUI: false,
+        autoFuel: false,
+      },
+    });
+    if (vault.statusCode !== 200) {
+      console.log("fireblocks - vault creation failed");
+      return Promise.reject("fireblocks - vault creation failed");
     }
-  }
-
-  public async registerNewWallet(chainId: string): Promise<string> {
-    await this.run();
-    return Promise.resolve("fireblocks_wallet_id");
+    console.log("fireblocks - created vault");
+    return [
+      {
+        walletId: vault.data.id,
+        address: "0x0", // TODO: Get address from vault
+        chainId: chainId,
+      },
+    ];
   }
 }
