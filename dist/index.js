@@ -14,59 +14,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv/config");
 const express_1 = __importDefault(require("express"));
-const signers_1 = require("./signers");
-const prisma_client_1 = require("./prisma_client");
+const service_1 = require("./service");
 const app = (0, express_1.default)();
 // enable JSON body parser
 app.use(express_1.default.json());
 app.get("/", (req, res) => {
     res.send("Hello World!");
 });
-app.get("/users", (req, res) => {
-    res.send("Hello World!");
-});
-const WALLETS_SIGNERS = {
-    ethereum: "fireblocks",
-};
 app.post("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const chainId = "ethereum"; // TODO, go through all supported chains
     const userId = req.body.id;
-    // Check if user exists
-    const user = yield prisma_client_1.prisma.user.findUnique({
-        where: {
-            userName: userId,
-        },
-        include: {
-            Wallet: true,
-        },
-    });
-    if (user) {
-        res.status(400).send(`User ${userId} already exists`);
-        return;
-    }
-    const signerName = WALLETS_SIGNERS[chainId];
-    const signer = signers_1.SIGNERS[signerName];
-    const wallets = yield signer.registerUser(userId);
-    for (const wallet of wallets) {
-        const user = yield prisma_client_1.prisma.user.create({
-            data: {
-                userName: userId,
-                Wallet: {
-                    create: {
-                        provider: signerName,
-                        address: wallet.address,
-                        chainId: wallet.chainId,
-                        remote_id: wallet.walletId,
-                    },
-                },
-            },
-            include: {
-                Wallet: true,
-            },
-        });
-        console.log(`wallet ${user.Wallet[0].id} with address ${user.Wallet[0].address} registered for user ${user.userName} for chain ${user.Wallet[0].chainId}`);
-    }
-    res.send(`User ${userId} registered`);
+    yield (0, service_1.registerUser)(userId);
+    const accounts = yield (0, service_1.getAccounts)(userId);
+    res.json(accounts);
 }));
 exports.default = app;
 //# sourceMappingURL=index.js.map

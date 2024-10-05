@@ -6,12 +6,14 @@ export type SIGNER = "fireblocks" | "narval";
 export interface Signer {
   name: SIGNER;
 
-  registerUser(
+  createWallet(): Promise<string>; // returns provider's wallet id
+  createAccount(
+    walletId: string,
     chainId: string,
-  ): Promise<{ walletId: string; address: string; chainId: string }[]>;
+  ): Promise<{ address: string }>;
 }
 
 export const SIGNERS: Record<SIGNER, Signer> = {
   fireblocks: new FireblocksSigner(),
-  narval: new NarvalSigner(),
+  narval: new NarvalSigner(), // FIXME: narval init happens every time, should be done once
 };

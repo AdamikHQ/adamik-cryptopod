@@ -9,17 +9,28 @@ datasource db {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  userName String   @unique
+  userName String    @unique
   Wallet   Wallet[]
+  Account  Account[]
 }
 
 model Wallet {
-  id        Int    @id @default(autoincrement())
-  userId    Int    @unique
-  user      User   @relation(fields: [userId], references: [id])
-  chainId   String
-  remote_id String
-  provider  String
-  address   String
+  userName String
+  user     User      @relation(fields: [userName], references: [userName])
+  id       String    @unique
+  provider String
+  Account  Account[]
+
+  @@unique([userName, provider]) // unique provider per user
+}
+
+model Account {
+  userName String
+  user     User   @relation(fields: [userName], references: [userName])
+  walletId String
+  wallet   Wallet @relation(fields: [walletId], references: [id])
+  chainId  String
+  address  String @unique
+
+  @@unique([userName, chainId]) // unique chaind registered per user
 }

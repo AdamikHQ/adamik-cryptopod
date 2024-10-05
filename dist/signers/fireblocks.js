@@ -19,7 +19,7 @@ class FireblocksSigner {
             secretKey: process.env.FIREBLOCKS_SECRET_KEY.replace(/\\n/g, "\n"),
         });
     }
-    registerUser(userId) {
+    createWallet() {
         return __awaiter(this, void 0, void 0, function* () {
             const vault = yield this.instance.vaults.createVaultAccount({
                 createVaultAccountRequest: {
@@ -33,14 +33,14 @@ class FireblocksSigner {
                 return Promise.reject("fireblocks - vault creation failed");
             }
             console.log("fireblocks - created vault");
-            const chainId = "ethereum"; // TODO: get chainId from vault
-            return [
-                {
-                    walletId: vault.data.id,
-                    address: "0x0", // TODO: Get address from vault
-                    chainId,
-                },
-            ];
+            return vault.data.id;
+        });
+    }
+    createAccount(walletId, chainId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // TODO: create a fireblock account
+            console.log("fireblocks - creating account");
+            return { address: "0x0" };
         });
     }
 }

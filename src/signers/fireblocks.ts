@@ -11,10 +11,7 @@ export class FireblocksSigner implements Signer {
       secretKey: process.env.FIREBLOCKS_SECRET_KEY.replace(/\\n/g, "\n"),
     });
   }
-
-  public async registerUser(
-    userId: string,
-  ): Promise<{ walletId: string; address: string; chainId: string }[]> {
+  async createWallet(): Promise<string> {
     const vault = await this.instance.vaults.createVaultAccount({
       createVaultAccountRequest: {
         name: "Vault Account",
@@ -27,13 +24,15 @@ export class FireblocksSigner implements Signer {
       return Promise.reject("fireblocks - vault creation failed");
     }
     console.log("fireblocks - created vault");
-    const chainId = "ethereum"; // TODO: get chainId from vault
-    return [
-      {
-        walletId: vault.data.id,
-        address: "0x0", // TODO: Get address from vault
-        chainId,
-      },
-    ];
+    return vault.data.id;
+  }
+
+  async createAccount(
+    walletId: string,
+    chainId: string,
+  ): Promise<{ address: string }> {
+    // TODO: create a fireblock account
+    console.log("fireblocks - creating account");
+    return { address: "0x0" };
   }
 }
