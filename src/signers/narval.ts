@@ -84,7 +84,7 @@ export class NarvalSigner implements Signer {
 
   async createAccount(
     _1: string, // unused, all cryptopod users use the same narval user
-    _2: string, // unused, narval wallets provide only evm string anyway
+    _2: string // unused, narval wallets provide only evm string anyway
   ): Promise<{ address: string }> {
     console.log("narval - requesting wallet create access token");
     // Request access to create wallet and account.
@@ -114,5 +114,13 @@ export class NarvalSigner implements Signer {
 
     await this.entityStoreClient.signAndPush(newEntities);
     return { address: account.address };
+  }
+
+  async sign(transaction: unknown): Promise<string> {
+    throw new Error("Not implemented");
+  }
+
+  async getSupportedAssets(): Promise<any> {
+    throw new Error("Not implemented");
   }
 }
