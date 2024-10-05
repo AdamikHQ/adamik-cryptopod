@@ -7,7 +7,7 @@
     "postinstall": "prisma generate",
     "watch": "tcs -w",
     "start": "vercel dev",
-    "vercel-build": "rimraf dist && prisma generate && prisma migrate deploy && tsc",
+    "build": "rimraf dist && pnpm install && prisma generate && prisma migrate deploy && tsc",
     "ts.check": "tsc --project tsconfig.json",
     "add-build": "git add dist"
   },
@@ -30,6 +30,7 @@
     "viem": "^2.21.18"
   },
   "devDependencies": {
+    "@prisma/client": "^5.20.0",
     "@types/express": "^5.0.0",
     "@types/node": "^22.7.4",
     "@types/uuid": "^10.0.0",
