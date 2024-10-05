@@ -13,7 +13,7 @@ export class FireblocksSigner implements Signer {
   }
 
   public async registerUser(
-    chainId: string,
+    userId: string,
   ): Promise<{ walletId: string; address: string; chainId: string }[]> {
     const vault = await this.instance.vaults.createVaultAccount({
       createVaultAccountRequest: {
@@ -27,11 +27,12 @@ export class FireblocksSigner implements Signer {
       return Promise.reject("fireblocks - vault creation failed");
     }
     console.log("fireblocks - created vault");
+    const chainId = "ethereum"; // TODO: get chainId from vault
     return [
       {
         walletId: vault.data.id,
         address: "0x0", // TODO: Get address from vault
-        chainId: chainId,
+        chainId,
       },
     ];
   }

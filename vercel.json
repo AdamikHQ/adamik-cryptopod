@@ -2,9 +2,11 @@
   "version": 2,
   "builds": [
     {
+      "buildCommand": "pnpm run vercel-build",
+      "devCommand": "pnpm run start",
       "src": "dist/index.js",
       "use": "@vercel/node",
-      "config": { "includeFiles": ["dist/**"] }
+      "config": { "includeFiles": ["dist/**", "prisma/**"] }
     }
   ],
   "routes": [
