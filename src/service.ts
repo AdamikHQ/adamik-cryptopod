@@ -38,6 +38,48 @@ const WALLETS_SIGNERS: { chainId: string; signer: SIGNER }[] = [
   // },
 ];
 
+async function getBalance(address: string, chainId: string): Promise<string> {
+  const balance_response = await fetch(
+    "https://api.adamik.io/api/account/state?include=native",
+    {
+      headers: {
+        Authorization: process.env.ADAMIK_API_KEY,
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({
+        chainId,
+        accountId: address,
+      }),
+    },
+  );
+
+  let balance =
+    balance_response.status === 200
+      ? (await balance_response.json()).balances.native.total
+      : 0;
+
+  const chain_response = await fetch(
+    `https://api.adamik.io/api/chains/${chainId}`,
+    {
+      headers: {
+        Authorization: process.env.ADAMIK_API_KEY,
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    },
+  );
+
+  const decimals =
+    chain_response.status === 200
+      ? Number((await chain_response.json()).decimals)
+      : 0;
+  balance =
+    decimals && !Number.isNaN(decimals) ? balance / 10 ** decimals : balance;
+
+  return balance.toString();
+}
+
 export async function getAccounts(
   userId: string,
 ): Promise<
@@ -66,7 +108,7 @@ export async function getAccounts(
             chainId: account.chainId,
             address: account.address,
             provider: provider as SIGNER,
-            balance: "100", // TODO: get balance from adamik
+            balance: await getBalance(account.address, account.chainId),
           };
         }),
       ),

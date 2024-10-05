@@ -47,6 +47,37 @@ const WALLETS_SIGNERS = [
     //   signer: "adamik",
     // },
 ];
+function getBalance(address, chainId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const balance_response = yield fetch("https://api.adamik.io/api/account/state?include=native", {
+            headers: {
+                Authorization: process.env.ADAMIK_API_KEY,
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify({
+                chainId,
+                accountId: address,
+            }),
+        });
+        let balance = balance_response.status === 200
+            ? (yield balance_response.json()).balances.native.total
+            : 0;
+        const chain_response = yield fetch(`https://api.adamik.io/api/chains/${chainId}`, {
+            headers: {
+                Authorization: process.env.ADAMIK_API_KEY,
+                "Content-Type": "application/json",
+            },
+            method: "GET",
+        });
+        const decimals = chain_response.status === 200
+            ? Number((yield chain_response.json()).decimals)
+            : 0;
+        balance =
+            decimals && !Number.isNaN(decimals) ? balance / Math.pow(10, decimals) : balance;
+        return balance.toString();
+    });
+}
 function getAccounts(userId) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield prisma_client_1.prisma.account
@@ -69,7 +100,7 @@ function getAccounts(userId) {
                 chainId: account.chainId,
                 address: account.address,
                 provider: provider,
-                balance: "100", // TODO: get balance from adamik
+                balance: yield getBalance(account.address, account.chainId),
             };
         }))));
     });

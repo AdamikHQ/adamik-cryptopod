@@ -22,33 +22,7 @@ app.post("/users", async (req, res) => {
 
     const accounts = await getAccounts(userId);
 
-    const accounts_with_balances = await Promise.all(
-      accounts.map(async (account) => {
-        const balance_response = await fetch(
-          "https://api.adamik.io/api/account/state?",
-          {
-            headers: {
-              Authorization: process.env.ADAMIK_API_KEY,
-              "Content-Type": "application/json",
-            },
-            method: "POST",
-            body: JSON.stringify({
-              chainId: account.chainId,
-              accountId: account.address,
-            }),
-          },
-        );
-
-        let balance =
-          balance_response.status === 200 ? await balance_response.json() : 0;
-        return {
-          ...account,
-          balance, // TODO: handle decimals
-        };
-      }),
-    );
-
-    res.json(accounts_with_balances);
+    res.json(accounts);
   } catch (error) {
     if (error instanceof FireblocksError) {
       console.error(error.message);

@@ -27,22 +27,7 @@ app.post("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const userId = req.body.id;
         yield (0, service_1.registerUser)(userId);
         const accounts = yield (0, service_1.getAccounts)(userId);
-        const accounts_with_balances = yield Promise.all(accounts.map((account) => __awaiter(void 0, void 0, void 0, function* () {
-            const balance_response = yield fetch("https://api.adamik.io/api/account/state?", {
-                headers: {
-                    Authorization: process.env.ADAMIK_API_KEY,
-                    "Content-Type": "application/json",
-                },
-                method: "POST",
-                body: JSON.stringify({
-                    chainId: account.chainId,
-                    accountId: account.address,
-                }),
-            });
-            let balance = balance_response.status === 200 ? yield balance_response.json() : 0;
-            return Object.assign(Object.assign({}, account), { balance });
-        })));
-        res.json(accounts_with_balances);
+        res.json(accounts);
     }
     catch (error) {
         if (error instanceof ts_sdk_1.FireblocksError) {
