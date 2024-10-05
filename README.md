@@ -1,5 +1,3 @@
-# CryptoPod
-
 <img src="./CryptoPod.png" alt="CryptoPod" style="filter: invert(100%);">
 
 CryptoPod is a configurable, modular, deployable solution that brings full blockchain support to your existing systems in just a few clicks.
