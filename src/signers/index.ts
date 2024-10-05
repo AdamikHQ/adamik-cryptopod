@@ -6,7 +6,7 @@ export type SIGNER = "fireblocks" | "narval";
 export interface Signer {
   name: SIGNER;
 
-  createWallet(): Promise<string>; // returns provider's wallet id
+  createWallet(userId: string): Promise<string>;
   createAccount(
     walletId: string,
     chainId: string,

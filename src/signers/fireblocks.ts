@@ -11,10 +11,10 @@ export class FireblocksSigner implements Signer {
       secretKey: process.env.FIREBLOCKS_SECRET_KEY.replace(/\\n/g, "\n"),
     });
   }
-  async createWallet(): Promise<string> {
+  async createWallet(userId: string): Promise<string> {
     const vault = await this.instance.vaults.createVaultAccount({
       createVaultAccountRequest: {
-        name: "Vault Account",
+        name: `Vault of user ${userId}`,
         hiddenOnUI: false,
         autoFuel: false,
       },
@@ -33,6 +33,11 @@ export class FireblocksSigner implements Signer {
   ): Promise<{ address: string }> {
     // TODO: create a fireblock account
     console.log("fireblocks - creating account");
+    // await this.instance.vaults.activateAssetForVaultAccount({
+    //   vaultAccountId: walletId,
+    //   assetId: chainId,
+    // });
+    console.log("fireblocks - activated asset");
     return { address: "0x0" };
   }
 }

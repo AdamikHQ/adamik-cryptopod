@@ -5,8 +5,32 @@ import { SIGNERS, type SIGNER } from "./signers";
 const WALLETS_SIGNERS: { chainId: string; signer: SIGNER }[] = [
   {
     chainId: "ethereum",
-    signer: "narval",
+    signer: "fireblocks",
   },
+  {
+    chainId: "bitcoin",
+    signer: "fireblocks",
+  },
+  {
+    chainId: "avalanche",
+    signer: "fireblocks",
+  },
+  {
+    chainId: "DFK",
+    signer: "fireblocks",
+  },
+  {
+    chainId: "Dexalot",
+    signer: "fireblocks",
+  },
+  // {
+  //   chainId: "tron",
+  //   signer: "adamik",
+  // },
+  // {
+  //   chainId: "cosmos",
+  //   signer: "adamik",
+  // },
 ];
 
 export async function getAccounts(
@@ -72,7 +96,7 @@ export async function registerUser(userId: string): Promise<void> {
 
     // if not, create it
     if (!wallet) {
-      const wallet_id = await signer.createWallet();
+      const wallet_id = await signer.createWallet(userId);
       wallet = await prisma.wallet.create({
         data: {
           userName: userId,

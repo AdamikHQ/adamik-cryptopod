@@ -30,7 +30,7 @@ model Account {
   walletId String
   wallet   Wallet @relation(fields: [walletId], references: [id])
   chainId  String
-  address  String @unique
+  address  String
 
   @@unique([userName, chainId]) // unique chaind registered per user
 }

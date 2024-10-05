@@ -16,8 +16,32 @@ const signers_1 = require("./signers");
 const WALLETS_SIGNERS = [
     {
         chainId: "ethereum",
-        signer: "narval",
+        signer: "fireblocks",
     },
+    {
+        chainId: "bitcoin",
+        signer: "fireblocks",
+    },
+    {
+        chainId: "avalanche",
+        signer: "fireblocks",
+    },
+    {
+        chainId: "DFK",
+        signer: "fireblocks",
+    },
+    {
+        chainId: "Dexalot",
+        signer: "fireblocks",
+    },
+    // {
+    //   chainId: "tron",
+    //   signer: "adamik",
+    // },
+    // {
+    //   chainId: "cosmos",
+    //   signer: "adamik",
+    // },
 ];
 function getAccounts(userId) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -71,7 +95,7 @@ function registerUser(userId) {
             });
             // if not, create it
             if (!wallet) {
-                const wallet_id = yield signer.createWallet();
+                const wallet_id = yield signer.createWallet(userId);
                 wallet = yield prisma_client_1.prisma.wallet.create({
                     data: {
                         userName: userId,

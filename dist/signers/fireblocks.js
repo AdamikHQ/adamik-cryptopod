@@ -19,11 +19,11 @@ class FireblocksSigner {
             secretKey: process.env.FIREBLOCKS_SECRET_KEY.replace(/\\n/g, "\n"),
         });
     }
-    createWallet() {
+    createWallet(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             const vault = yield this.instance.vaults.createVaultAccount({
                 createVaultAccountRequest: {
-                    name: "Vault Account",
+                    name: `Vault of user ${userId}`,
                     hiddenOnUI: false,
                     autoFuel: false,
                 },
@@ -40,6 +40,11 @@ class FireblocksSigner {
         return __awaiter(this, void 0, void 0, function* () {
             // TODO: create a fireblock account
             console.log("fireblocks - creating account");
+            // await this.instance.vaults.activateAssetForVaultAccount({
+            //   vaultAccountId: walletId,
+            //   assetId: chainId,
+            // });
+            console.log("fireblocks - activated asset");
             return { address: "0x0" };
         });
     }
