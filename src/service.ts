@@ -81,7 +81,7 @@ async function getBalance(address: string, chainId: string): Promise<string> {
 }
 
 export async function getAccounts(
-  userId: string
+  userId: string,
 ): Promise<
   { chainId: string; address: string; balance: string; provider: SIGNER }[]
 > {
@@ -110,8 +110,8 @@ export async function getAccounts(
             provider: provider as SIGNER,
             balance: await getBalance(account.address, account.chainId),
           };
-        })
-      )
+        }),
+      ),
     );
 }
 
@@ -157,7 +157,7 @@ export async function registerUser(userId: string): Promise<void> {
       console.log(`wallet ${wallet.id} registered for user ${wallet.userName}`);
     } else {
       console.log(
-        `wallet ${wallet.id} already registered for user ${wallet.userName}`
+        `wallet ${wallet.id} already registered for user ${wallet.userName}`,
       );
     }
 
@@ -178,17 +178,16 @@ export async function registerUser(userId: string): Promise<void> {
         data: {
           userName: userId,
           provider: signer.name,
-          username: wallet.userName,
           chainId: chain.chainId,
           address: address,
         },
       });
       console.log(
-        `account ${account_created.chainId} registered for user ${account_created.userName}`
+        `account ${account_created.chainId} registered for user ${account_created.userName}`,
       );
     } else {
       console.log(
-        `account ${account.chainId} already registered for user ${account.userName}`
+        `account ${account.chainId} already registered for user ${account.userName}`,
       );
     }
   }
@@ -197,7 +196,7 @@ export async function registerUser(userId: string): Promise<void> {
 export async function sign(
   userId: string,
   chainId: string,
-  transaction: unknown
+  transaction: unknown,
 ): Promise<string> {
   const signer = SIGNERS["fireblocks"]; // TODO pick the right one
 

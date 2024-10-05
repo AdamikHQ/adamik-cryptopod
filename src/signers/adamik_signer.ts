@@ -6,9 +6,11 @@ export class AdamikSigner implements Signer {
   constructor() {
     this.name = "adamik";
   }
+
   sign(transaction: unknown): Promise<string> {
     throw new Error("Method not implemented.");
   }
+
   getSupportedAssets(): Promise<any> {
     throw new Error("Method not implemented.");
   }

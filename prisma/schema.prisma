@@ -27,9 +27,8 @@ model Wallet {
 model Account {
   userName String
   user     User   @relation(fields: [userName], references: [userName])
-  username String
   provider String
-  wallet   Wallet @relation(fields: [username, provider], references: [userName, provider])
+  wallet   Wallet @relation(fields: [userName, provider], references: [userName, provider])
   chainId  String
   address  String
 

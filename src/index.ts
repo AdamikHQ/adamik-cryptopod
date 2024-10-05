@@ -38,11 +38,12 @@ app.post("/users", async (req, res) => {
   }
 });
 
-app.post("/sign", async (req, res) => {
+app.post("/transactions", async (req, res) => {
   try {
     const userId = req.body.id; // TODO, use this to get the Fireblocks/Narval id
-    const chainId = "ETH"; // TODO Get from request
-    const message = keccak256("0x5445535412121212").slice(2); // TODO get from request
+    const chainId = "ETH_TEST5"; // TODO Get from request
+    const message =
+      "0x02f283aa36a780843b9aca0085383cd6b41f82520894d9cf97a8eb01d27b1f5a8809273137d92758c31287038d7ea4c6800080c0";
 
     console.log("XXX - /sign - userId:", userId);
 
@@ -51,7 +52,7 @@ app.post("/sign", async (req, res) => {
       operation: TransactionOperation.Raw,
       source: {
         type: TransferPeerPathType.VaultAccount,
-        id: "31",
+        id: "22",
       },
       note: ``,
       extraParameters: {

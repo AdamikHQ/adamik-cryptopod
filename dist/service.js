@@ -164,7 +164,6 @@ function registerUser(userId) {
                     data: {
                         userName: userId,
                         provider: signer.name,
-                        username: wallet.userName,
                         chainId: chain.chainId,
                         address: address,
                     },

@@ -16,7 +16,6 @@ require("dotenv/config");
 const express_1 = __importDefault(require("express"));
 const service_1 = require("./service");
 const ts_sdk_1 = require("@fireblocks/ts-sdk");
-const viem_1 = require("viem");
 const app = (0, express_1.default)();
 // enable JSON body parser
 app.use(express_1.default.json());
@@ -40,18 +39,18 @@ app.post("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(500).json({ error });
     }
 }));
-app.post("/sign", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post("/transactions", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = req.body.id; // TODO, use this to get the Fireblocks/Narval id
-        const chainId = "ETH"; // TODO Get from request
-        const message = (0, viem_1.keccak256)("0x5445535412121212").slice(2); // TODO get from request
+        const chainId = "ETH_TEST5"; // TODO Get from request
+        const message = "0x02f283aa36a780843b9aca0085383cd6b41f82520894d9cf97a8eb01d27b1f5a8809273137d92758c31287038d7ea4c6800080c0";
         console.log("XXX - /sign - userId:", userId);
         const transaction = {
             assetId: chainId,
             operation: ts_sdk_1.TransactionOperation.Raw,
             source: {
                 type: ts_sdk_1.TransferPeerPathType.VaultAccount,
-                id: "31",
+                id: "22",
             },
             note: ``,
             extraParameters: {
