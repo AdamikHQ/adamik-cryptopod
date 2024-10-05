@@ -4,18 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "prisma generate",
+    "postinstall": "prisma generate && prisma migrate deploy",
     "watch": "tcs -w",
     "start": "vercel dev",
-    "build": "rimraf dist && pnpm install && prisma generate && prisma migrate deploy && tsc",
+    "build": "rimraf dist && tsc",
     "ts.check": "tsc --project tsconfig.json",
-    "add-build": "git add dist"
+    "add-build": "git add dist",
+    "prepare": "husky"
   },
-  "pre-commit": [
-    "ts.check",
-    "build",
-    "add-build"
-  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -34,8 +30,8 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.7.4",
     "@types/uuid": "^10.0.0",
+    "husky": "^9.1.6",
     "nodemon": "^3.1.7",
-    "pre-commit": "^1.2.2",
     "prisma": "^5.20.0",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
