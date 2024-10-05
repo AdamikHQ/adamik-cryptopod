@@ -7,7 +7,7 @@
     "postinstall": "prisma generate",
     "watch": "tcs -w",
     "start": "vercel dev",
-    "vercel-build": "rimraf dist && npm add -D prisma && prisma generate && prisma migrate deploy && tsc",
+    "vercel-build": "rimraf dist && prisma generate && prisma migrate deploy && tsc",
     "ts.check": "tsc --project tsconfig.json",
     "add-build": "git add dist"
   },
