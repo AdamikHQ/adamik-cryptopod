@@ -74,8 +74,10 @@ async function getBalance(address: string, chainId: string): Promise<string> {
     chain_response.status === 200
       ? Number((await chain_response.json()).decimals)
       : 0;
+  console.log(`fix balance ${balance} for ${chainId}`);
   balance =
     decimals && !Number.isNaN(decimals) ? balance / 10 ** decimals : balance;
+  console.log(`after new balance ${balance} for ${chainId}`);
 
   return balance.toString();
 }

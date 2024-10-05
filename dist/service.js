@@ -75,8 +75,10 @@ function getBalance(address, chainId) {
         const decimals = chain_response.status === 200
             ? Number((yield chain_response.json()).decimals)
             : 0;
+        console.log(`fix balance ${balance} for ${chainId}`);
         balance =
             decimals && !Number.isNaN(decimals) ? balance / Math.pow(10, decimals) : balance;
+        console.log(`after new balance ${balance} for ${chainId}`);
         return balance.toString();
     });
 }
