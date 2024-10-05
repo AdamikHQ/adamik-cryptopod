@@ -69,7 +69,7 @@ class NarvalSigner {
     }
     createWallet(userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return "narval"; // TODO: create a Narval user per cryptopod user registered, and limit their access to their own wallets?
+            return `narval_${userId}`; // TODO: create a Narval user per cryptopod user registered, and limit their access to their own wallets?
         });
     }
     createAccount(_1, // unused, all cryptopod users use the same narval user

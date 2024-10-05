@@ -12,8 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FireblocksSigner = void 0;
 const ts_sdk_1 = require("@fireblocks/ts-sdk");
 const chainIdMappings = {
-    bitcoin: "BTC_TEST",
-    ethereum: "ETH_TEST5", // ETH_TEST is deprecated and gets refused by fireblocks
+    "bitcoin-testnet": "BTC_TEST",
+    sepolia: "ETH_TEST5", // ETH_TEST is deprecated and gets refused by fireblocks
     // polygon: "polygon", // TODO
     // avalanche: "avalanche", // TODO
     // arbitrum: "arbitrum", // TODO
@@ -45,13 +45,11 @@ class FireblocksSigner {
     }
     createAccount(walletId, chainId) {
         return __awaiter(this, void 0, void 0, function* () {
-            // TODO: create a fireblock account
-            console.log("fireblocks - creating account");
             const vaultWallet = yield this.instance.vaults.createVaultAccountAsset({
                 vaultAccountId: walletId,
                 assetId: chainIdMappings[chainId],
             });
-            console.log(`fireblocks - activated asset ${chainId}`);
+            console.log(`fireblocks - created account ${chainId}`);
             return { address: vaultWallet.data.address };
         });
     }

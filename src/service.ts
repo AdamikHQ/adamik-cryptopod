@@ -4,11 +4,11 @@ import { SIGNERS, type SIGNER } from "./signers";
 
 const WALLETS_SIGNERS: { chainId: string; signer: SIGNER }[] = [
   {
-    chainId: "ethereum",
-    signer: "fireblocks",
+    chainId: "sepolia",
+    signer: "narval",
   },
   {
-    chainId: "bitcoin",
+    chainId: "bitcoin-testnet",
     signer: "fireblocks",
   },
   // {

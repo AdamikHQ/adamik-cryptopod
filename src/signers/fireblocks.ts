@@ -2,8 +2,8 @@ import type { SIGNER, Signer } from ".";
 import { Fireblocks } from "@fireblocks/ts-sdk";
 
 const chainIdMappings: { [k: string]: string } = {
-  bitcoin: "BTC_TEST",
-  ethereum: "ETH_TEST5", // ETH_TEST is deprecated and gets refused by fireblocks
+  "bitcoin-testnet": "BTC_TEST",
+  sepolia: "ETH_TEST5", // ETH_TEST is deprecated and gets refused by fireblocks
   // polygon: "polygon", // TODO
   // avalanche: "avalanche", // TODO
   // arbitrum: "arbitrum", // TODO
@@ -39,14 +39,12 @@ export class FireblocksSigner implements Signer {
     walletId: string,
     chainId: string,
   ): Promise<{ address: string }> {
-    // TODO: create a fireblock account
-    console.log("fireblocks - creating account");
     const vaultWallet = await this.instance.vaults.createVaultAccountAsset({
       vaultAccountId: walletId,
       assetId: chainIdMappings[chainId],
     });
 
-    console.log(`fireblocks - activated asset ${chainId}`);
+    console.log(`fireblocks - created account ${chainId}`);
     return { address: vaultWallet.data.address };
   }
 }

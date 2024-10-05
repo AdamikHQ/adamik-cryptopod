@@ -15,11 +15,11 @@ const prisma_client_1 = require("./prisma_client");
 const signers_1 = require("./signers");
 const WALLETS_SIGNERS = [
     {
-        chainId: "ethereum",
-        signer: "fireblocks",
+        chainId: "sepolia",
+        signer: "narval",
     },
     {
-        chainId: "bitcoin",
+        chainId: "bitcoin-testnet",
         signer: "fireblocks",
     },
     // {
