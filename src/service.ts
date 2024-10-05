@@ -50,7 +50,10 @@ export async function getAccounts(
           // fetch provider from database
           const { provider } = await prisma.wallet.findUnique({
             where: {
-              id: account.walletId,
+              userName_provider: {
+                userName: account.userName,
+                provider: account.provider,
+              },
             },
           });
 
@@ -127,7 +130,8 @@ export async function registerUser(userId: string): Promise<void> {
       const account_created = await prisma.account.create({
         data: {
           userName: userId,
-          walletId: wallet.id,
+          provider: signer.name,
+          username: wallet.userName,
           chainId: chain.chainId,
           address: address,
         },

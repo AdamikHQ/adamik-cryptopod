@@ -79,7 +79,7 @@ export class NarvalSigner implements Signer {
   }
 
   async createWallet(userId: string): Promise<string> {
-    return `narval_${userId}`; // TODO: create a Narval user per cryptopod user registered, and limit their access to their own wallets?
+    return "narval"; // TODO: create a Narval user per cryptopod user registered, and limit their access to their own wallets?
   }
 
   async createAccount(

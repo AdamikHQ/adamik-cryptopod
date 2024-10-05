@@ -55,7 +55,10 @@ function getAccounts(userId) {
             // fetch provider from database
             const { provider } = yield prisma_client_1.prisma.wallet.findUnique({
                 where: {
-                    id: account.walletId,
+                    userName_provider: {
+                        userName: account.userName,
+                        provider: account.provider,
+                    },
                 },
             });
             return {
@@ -123,7 +126,8 @@ function registerUser(userId) {
                 const account_created = yield prisma_client_1.prisma.account.create({
                     data: {
                         userName: userId,
-                        walletId: wallet.id,
+                        provider: signer.name,
+                        username: wallet.userName,
                         chainId: chain.chainId,
                         address: address,
                     },
