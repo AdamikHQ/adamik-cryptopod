@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv/config");
 const express_1 = __importDefault(require("express"));
 const service_1 = require("./service");
+const ts_sdk_1 = require("@fireblocks/ts-sdk");
 const app = (0, express_1.default)();
 // enable JSON body parser
 app.use(express_1.default.json());
@@ -22,11 +23,22 @@ app.get("/", (req, res) => {
     res.send("Hello World!");
 });
 app.post("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const chainId = "ethereum"; // TODO, go through all supported chains
-    const userId = req.body.id;
-    yield (0, service_1.registerUser)(userId);
-    const accounts = yield (0, service_1.getAccounts)(userId);
-    res.json(accounts);
+    try {
+        const chainId = "ethereum"; // TODO, go through all supported chains
+        const userId = req.body.id;
+        yield (0, service_1.registerUser)(userId);
+        const accounts = yield (0, service_1.getAccounts)(userId);
+        res.json(accounts);
+    }
+    catch (error) {
+        if (error instanceof ts_sdk_1.FireblocksError) {
+            console.error(error.message);
+            res.status(500).json({ error: error.message });
+            return;
+        }
+        console.error(error);
+        res.status(500).json({ error });
+    }
 }));
 exports.default = app;
 //# sourceMappingURL=index.js.map

@@ -22,18 +22,18 @@ const WALLETS_SIGNERS = [
         chainId: "bitcoin",
         signer: "fireblocks",
     },
-    {
-        chainId: "avalanche",
-        signer: "fireblocks",
-    },
-    {
-        chainId: "DFK",
-        signer: "fireblocks",
-    },
-    {
-        chainId: "Dexalot",
-        signer: "fireblocks",
-    },
+    // {
+    //   chainId: "avalanche",
+    //   signer: "fireblocks",
+    // },
+    // {
+    //   chainId: "DFK",
+    //   signer: "fireblocks",
+    // },
+    // {
+    //   chainId: "Dexalot",
+    //   signer: "fireblocks",
+    // },
     // {
     //   chainId: "tron",
     //   signer: "adamik",

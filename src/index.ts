@@ -3,6 +3,7 @@ import "dotenv/config";
 import express from "express";
 import { prisma } from "./prisma_client";
 import { getAccounts, registerUser } from "./service";
+import { FireblocksError } from "@fireblocks/ts-sdk";
 
 const app = express();
 
@@ -14,13 +15,23 @@ app.get("/", (req, res) => {
 });
 
 app.post("/users", async (req, res) => {
-  const chainId = "ethereum"; // TODO, go through all supported chains
-  const userId = req.body.id;
+  try {
+    const chainId = "ethereum"; // TODO, go through all supported chains
+    const userId = req.body.id;
 
-  await registerUser(userId);
+    await registerUser(userId);
 
-  const accounts = await getAccounts(userId);
-  res.json(accounts);
+    const accounts = await getAccounts(userId);
+    res.json(accounts);
+  } catch (error) {
+    if (error instanceof FireblocksError) {
+      console.error(error.message);
+      res.status(500).json({ error: error.message });
+      return;
+    }
+    console.error(error);
+    res.status(500).json({ error });
+  }
 });
 
 export default app;
