@@ -2,11 +2,12 @@ import { Account, Wallet } from "@prisma/client";
 import { prisma } from "./prisma_client";
 import { SIGNERS, type SIGNER } from "./signers";
 
-const WALLETS_SIGNERS: Record<string, SIGNER> = {
-  ethereum: "fireblocks",
-};
-
-const supportedChains = ["ethereum"]; // TODO: make this configurable
+const WALLETS_SIGNERS: { chainId: string; signer: SIGNER }[] = [
+  {
+    chainId: "ethereum",
+    signer: "narval",
+  },
+];
 
 export async function getAccounts(
   userId: string,
@@ -32,7 +33,7 @@ export async function getAccounts(
           return {
             chainId: account.chainId,
             address: account.address,
-            provider: "fireblocks",
+            provider: provider as SIGNER,
             balance: "100", // TODO: get balance from adamik
           };
         }),
@@ -56,16 +57,15 @@ export async function registerUser(userId: string): Promise<void> {
     });
   }
 
-  for (const chainId of supportedChains) {
-    const signerName = WALLETS_SIGNERS[chainId];
-    const signer = SIGNERS[signerName];
+  for (const chain of WALLETS_SIGNERS) {
+    const signer = SIGNERS[chain.signer];
 
     // 1. check if wallet exists
     let wallet = await prisma.wallet.findUnique({
       where: {
         userName_provider: {
           userName: userId,
-          provider: signerName,
+          provider: signer.name,
         },
       },
     });
@@ -76,7 +76,7 @@ export async function registerUser(userId: string): Promise<void> {
       wallet = await prisma.wallet.create({
         data: {
           userName: userId,
-          provider: signerName,
+          provider: signer.name,
           id: wallet_id,
         },
       });
@@ -92,19 +92,19 @@ export async function registerUser(userId: string): Promise<void> {
       where: {
         userName_chainId: {
           userName: userId,
-          chainId: chainId,
+          chainId: chain.chainId,
         },
       },
     });
 
     // if not, create it
     if (!account) {
-      const { address } = await signer.createAccount(wallet.id, chainId);
+      const { address } = await signer.createAccount(wallet.id, chain.chainId);
       const account_created = await prisma.account.create({
         data: {
           userName: userId,
           walletId: wallet.id,
-          chainId: chainId,
+          chainId: chain.chainId,
           address: address,
         },
       });

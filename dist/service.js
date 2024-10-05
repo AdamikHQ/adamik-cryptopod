@@ -13,10 +13,12 @@ exports.getAccounts = getAccounts;
 exports.registerUser = registerUser;
 const prisma_client_1 = require("./prisma_client");
 const signers_1 = require("./signers");
-const WALLETS_SIGNERS = {
-    ethereum: "fireblocks",
-};
-const supportedChains = ["ethereum"]; // TODO: make this configurable
+const WALLETS_SIGNERS = [
+    {
+        chainId: "ethereum",
+        signer: "narval",
+    },
+];
 function getAccounts(userId) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield prisma_client_1.prisma.account
@@ -35,7 +37,7 @@ function getAccounts(userId) {
             return {
                 chainId: account.chainId,
                 address: account.address,
-                provider: "fireblocks",
+                provider: provider,
                 balance: "100", // TODO: get balance from adamik
             };
         }))));
@@ -56,15 +58,14 @@ function registerUser(userId) {
                 },
             });
         }
-        for (const chainId of supportedChains) {
-            const signerName = WALLETS_SIGNERS[chainId];
-            const signer = signers_1.SIGNERS[signerName];
+        for (const chain of WALLETS_SIGNERS) {
+            const signer = signers_1.SIGNERS[chain.signer];
             // 1. check if wallet exists
             let wallet = yield prisma_client_1.prisma.wallet.findUnique({
                 where: {
                     userName_provider: {
                         userName: userId,
-                        provider: signerName,
+                        provider: signer.name,
                     },
                 },
             });
@@ -74,7 +75,7 @@ function registerUser(userId) {
                 wallet = yield prisma_client_1.prisma.wallet.create({
                     data: {
                         userName: userId,
-                        provider: signerName,
+                        provider: signer.name,
                         id: wallet_id,
                     },
                 });
@@ -88,18 +89,18 @@ function registerUser(userId) {
                 where: {
                     userName_chainId: {
                         userName: userId,
-                        chainId: chainId,
+                        chainId: chain.chainId,
                     },
                 },
             });
             // if not, create it
             if (!account) {
-                const { address } = yield signer.createAccount(wallet.id, chainId);
+                const { address } = yield signer.createAccount(wallet.id, chain.chainId);
                 const account_created = yield prisma_client_1.prisma.account.create({
                     data: {
                         userName: userId,
                         walletId: wallet.id,
-                        chainId: chainId,
+                        chainId: chain.chainId,
                         address: address,
                     },
                 });
