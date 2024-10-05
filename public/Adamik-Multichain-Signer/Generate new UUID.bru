@@ -1,0 +1,15 @@
+meta {
+  name: Generate new UUID
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{ _['api-url'] }}/api/register
+  body: none
+  auth: none
+}
+
+params:query {
+  uuid: 123e4567-e89b-12d3-a456-42661417401
+}

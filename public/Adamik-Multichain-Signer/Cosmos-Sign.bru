@@ -1,0 +1,52 @@
+meta {
+  name: Cosmos-Sign
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{ _['api-url'] }}/api/sign
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "uuid": "b370e9dd-a632-42ba-9d01-a4de7f1b5368",
+    "tx": {
+  "chain_id": "cosmoshub-4",
+      "account_number": "2826602",
+      "sequence": "9",
+      "fee": {
+          "amount": [
+              {
+                  "denom": "uatom",
+                  "amount": "2798"
+              }
+          ],
+          "gas": "111885"
+      },
+      "msgs": [
+          {
+              "type": "cosmos-sdk/MsgSend",
+              "value": {
+                  "from_address": "cosmos1tkepfylhl7fmkrzsvphky2z0r7upvr9t689g2u",
+                  "to_address": "cosmos1tkepfylhl7fmkrzsvphky2z0r7upvr9t689g2u",
+                  "amount": [
+                      {
+                          "denom": "uatom",
+                          "amount": "1000"
+                      }
+                  ]
+              }
+          }
+      ],
+      "memo": ""
+    },
+    "chain": "cosmos"
+  }
+}

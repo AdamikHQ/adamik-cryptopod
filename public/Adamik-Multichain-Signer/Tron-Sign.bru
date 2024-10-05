@@ -1,0 +1,19 @@
+meta {
+  name: Tron-Sign
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{ _['api-url'] }}/api/sign
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {   "uuid": "c6a07b9e-40d9-4cbb-b3a2-040f8165b0dd",   "chain": "tron",   "fee": "10",   "tx": {     "transactionBuilded": {       "visible": false,       "txID": "82ae856f86461eee89f350b104215e16ac96dd094ac06096975df9c6d6db9948",       "raw_data_hex": "0a02488522088203e1c4636043fe40f89c919aa4325a66080112620a2d747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e5472616e73666572436f6e747261637412310a1541a7a3c5046957d616614a25c378ef31f1e10e9191121541d43543fa38eabb1d10a302dd4c249662f0da3de918c4397098c88d9aa432",       "raw_data": {         "contract": [           {             "parameter": {               "value": {                 "to_address": "41d43543fa38eabb1d10a302dd4c249662f0da3de9",                 "owner_address": "41a7a3c5046957d616614a25c378ef31f1e10e9191",                 "amount": 7692               },               "type_url": "type.googleapis.com/protocol.TransferContract"             },             "type": "TransferContract"           }         ],         "ref_block_bytes": "4885",         "ref_block_hash": "8203e1c4636043fe",         "expiration": 1727705403000,         "timestamp": 1727705343000       }     }   } }
+}

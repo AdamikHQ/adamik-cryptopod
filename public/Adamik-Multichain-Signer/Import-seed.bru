@@ -1,0 +1,19 @@
+meta {
+  name: Import-seed
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{ _['api-url'] }}/api/import-seed
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {"mnemonic": "whip hat solve language coyote cereal laundry upset symptom swift elder market"}
+}

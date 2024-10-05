@@ -11,6 +11,11 @@ const WALLETS_SIGNERS: { chainId: string; signer: SIGNER }[] = [
     chainId: "bitcoin-testnet",
     signer: "fireblocks",
   },
+  {
+    chainId: "tron",
+    signer: "adamik",
+  },
+
   // {
   //   chainId: "avalanche",
   //   signer: "fireblocks",
