@@ -73,7 +73,8 @@ class NarvalSigner {
         });
     }
     createAccount(_1, // unused, all cryptopod users use the same narval user
-    _2) {
+    _2 // unused, narval wallets provide only evm string anyway
+    ) {
         return __awaiter(this, void 0, void 0, function* () {
             console.log("narval - requesting wallet create access token");
             // Request access to create wallet and account.
@@ -98,6 +99,16 @@ class NarvalSigner {
                 ] });
             yield this.entityStoreClient.signAndPush(newEntities);
             return { address: account.address };
+        });
+    }
+    sign(transaction) {
+        return __awaiter(this, void 0, void 0, function* () {
+            throw new Error("Not implemented");
+        });
+    }
+    getSupportedAssets() {
+        return __awaiter(this, void 0, void 0, function* () {
+            throw new Error("Not implemented");
         });
     }
 }

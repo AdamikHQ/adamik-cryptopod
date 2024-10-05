@@ -16,6 +16,7 @@ require("dotenv/config");
 const express_1 = __importDefault(require("express"));
 const service_1 = require("./service");
 const ts_sdk_1 = require("@fireblocks/ts-sdk");
+const viem_1 = require("viem");
 const app = (0, express_1.default)();
 // enable JSON body parser
 app.use(express_1.default.json());
@@ -38,6 +39,47 @@ app.post("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         console.error(error);
         res.status(500).json({ error });
     }
+}));
+app.post("/sign", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = req.body.id; // TODO, use this to get the Fireblocks/Narval id
+        const chainId = "ETH"; // TODO Get from request
+        const message = (0, viem_1.keccak256)("0x5445535412121212").slice(2); // TODO get from request
+        console.log("XXX - /sign - userId:", userId);
+        const transaction = {
+            assetId: chainId,
+            operation: ts_sdk_1.TransactionOperation.Raw,
+            source: {
+                type: ts_sdk_1.TransferPeerPathType.VaultAccount,
+                id: "31",
+            },
+            note: ``,
+            extraParameters: {
+                rawMessageData: {
+                    algorithm: "MPC_ECDSA_SECP256K1", // Optional
+                    messages: [
+                        {
+                            content: message, // TODO
+                            //derivationPath: [44, 0, 0, 0, 0], // TODO ?
+                        },
+                    ],
+                },
+            },
+        };
+        const signature = yield (0, service_1.sign)(userId, chainId, transaction);
+        // FIXME DEBUG TBR
+        console.log("XXX - signature:", signature);
+        res.json(signature);
+    }
+    catch (error) {
+        console.log("XXX - error:", error.toString());
+        res.status(500).json({ error });
+    }
+    // TODO
+}));
+app.get("/assets", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const supportedAssets = yield (0, service_1.getSupportedAssets)();
+    res.json(supportedAssets);
 }));
 exports.default = app;
 //# sourceMappingURL=index.js.map

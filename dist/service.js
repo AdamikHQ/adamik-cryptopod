@@ -11,6 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAccounts = getAccounts;
 exports.registerUser = registerUser;
+exports.sign = sign;
+exports.getSupportedAssets = getSupportedAssets;
 const prisma_client_1 = require("./prisma_client");
 const signers_1 = require("./signers");
 const WALLETS_SIGNERS = [
@@ -173,6 +175,29 @@ function registerUser(userId) {
                 console.log(`account ${account.chainId} already registered for user ${account.userName}`);
             }
         }
+    });
+}
+function sign(userId, chainId, transaction) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const signer = signers_1.SIGNERS["fireblocks"]; // TODO pick the right one
+        /*
+        const { provider } = await prisma.wallet.findUnique({
+          where: {
+            userName_provider: {
+              userName: userId,
+              provider: signer.name,
+            },
+          },
+        });
+        */
+        return signer.sign(transaction);
+    });
+}
+function getSupportedAssets() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const signer = signers_1.SIGNERS["fireblocks"]; // TODO pick the right one
+        const supportedAssets = yield signer.getSupportedAssets();
+        return supportedAssets;
     });
 }
 //# sourceMappingURL=service.js.map

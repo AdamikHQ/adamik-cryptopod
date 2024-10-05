@@ -15,6 +15,12 @@ class AdamikSigner {
         this.ADAMIK_SIGNER_URL = "https://adamik-multichain-signer.vercel.app";
         this.name = "adamik";
     }
+    sign(transaction) {
+        throw new Error("Method not implemented.");
+    }
+    getSupportedAssets() {
+        throw new Error("Method not implemented.");
+    }
     createWallet(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             const walletId = yield fetch(`${this.ADAMIK_SIGNER_URL}/api/register?uuid=${userId}`, {

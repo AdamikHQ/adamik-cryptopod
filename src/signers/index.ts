@@ -10,8 +10,11 @@ export interface Signer {
   createWallet(userId: string): Promise<string>;
   createAccount(
     walletId: string,
-    chainId: string,
+    chainId: string
   ): Promise<{ address: string }>;
+
+  sign(transaction: unknown): Promise<string>;
+  getSupportedAssets(): Promise<any>;
 }
 
 export const SIGNERS: Record<SIGNER, Signer> = {
