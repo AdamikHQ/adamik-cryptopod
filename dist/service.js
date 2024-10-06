@@ -28,10 +28,10 @@ const WALLETS_SIGNERS = [
         chainId: "tron",
         signer: "adamik",
     },
-    // {
-    //   chainId: "avalanche",
-    //   signer: "fireblocks",
-    // },
+    {
+        chainId: "avalanche",
+        signer: "fireblocks",
+    },
     // {
     //   chainId: "DFK",
     //   signer: "fireblocks",
