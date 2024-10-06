@@ -30,12 +30,12 @@ const WALLETS_SIGNERS = [
     },
     {
         chainId: "avalanche-fuji",
-        signer: "fireblocks",
+        signer: "narval",
     },
-    // {
-    //   chainId: "DFK",
-    //   signer: "fireblocks",
-    // },
+    {
+        chainId: "DFK",
+        signer: "narval",
+    },
     // {
     //   chainId: "Dexalot",
     //   signer: "fireblocks",

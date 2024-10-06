@@ -17,12 +17,12 @@ const WALLETS_SIGNERS: { chainId: string; signer: SIGNER }[] = [
   },
   {
     chainId: "avalanche-fuji",
-    signer: "fireblocks",
+    signer: "narval",
   },
-  // {
-  //   chainId: "DFK",
-  //   signer: "fireblocks",
-  // },
+  {
+    chainId: "DFK",
+    signer: "narval",
+  },
   // {
   //   chainId: "Dexalot",
   //   signer: "fireblocks",
