@@ -20,7 +20,7 @@ const WALLETS_SIGNERS: { chainId: string; signer: SIGNER }[] = [
     signer: "narval",
   },
   {
-    chainId: "DFK",
+    chainId: "defi-kingdoms",
     signer: "narval",
   },
   // {

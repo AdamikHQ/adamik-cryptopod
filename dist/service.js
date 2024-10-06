@@ -33,7 +33,7 @@ const WALLETS_SIGNERS = [
         signer: "narval",
     },
     {
-        chainId: "DFK",
+        chainId: "defi-kingdoms",
         signer: "narval",
     },
     // {
