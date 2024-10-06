@@ -29,7 +29,7 @@ const WALLETS_SIGNERS = [
         signer: "adamik",
     },
     {
-        chainId: "avalanche",
+        chainId: "avalanche-fuji",
         signer: "fireblocks",
     },
     // {

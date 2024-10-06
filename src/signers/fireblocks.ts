@@ -9,8 +9,8 @@ import {
 const chainIdMappings: { [k: string]: string } = {
   "bitcoin-testnet": "BTC_TEST",
   sepolia: "ETH_TEST5", // ETH_TEST is deprecated and gets refused by fireblocks
+  "avalanche-fuji": "AVAXTEST", // TODO
   // polygon: "polygon", // TODO
-  // avalanche: "avalanche", // TODO
   // arbitrum: "arbitrum", // TODO
 };
 
@@ -42,7 +42,7 @@ export class FireblocksSigner implements Signer {
 
   async createAccount(
     walletId: string,
-    chainId: string
+    chainId: string,
   ): Promise<{ address: string }> {
     const vaultWallet = await this.instance.vaults.createVaultAccountAsset({
       vaultAccountId: walletId,
@@ -77,7 +77,7 @@ export class FireblocksSigner implements Signer {
         ]).toString("hex") + signature.fullSig;
       console.log(
         "Encoded Signature:",
-        Buffer.from(encodedSig, "hex").toString("base64")
+        Buffer.from(encodedSig, "hex").toString("base64"),
       );
       return encodedSig;
     } catch (error) {
@@ -106,7 +106,7 @@ export class FireblocksSigner implements Signer {
           case TransactionStateEnum.Failed:
           case TransactionStateEnum.Rejected:
             throw new Error(
-              `Signing request failed/blocked/cancelled: Transaction: ${tx.id} status is ${tx.status}`
+              `Signing request failed/blocked/cancelled: Transaction: ${tx.id} status is ${tx.status}`,
             );
           default:
             console.log(messageToConsole);

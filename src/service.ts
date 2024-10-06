@@ -16,7 +16,7 @@ const WALLETS_SIGNERS: { chainId: string; signer: SIGNER }[] = [
     signer: "adamik",
   },
   {
-    chainId: "avalanche",
+    chainId: "avalanche-fuji",
     signer: "fireblocks",
   },
   // {

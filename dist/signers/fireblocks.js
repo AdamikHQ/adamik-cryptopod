@@ -14,8 +14,8 @@ const ts_sdk_1 = require("@fireblocks/ts-sdk");
 const chainIdMappings = {
     "bitcoin-testnet": "BTC_TEST",
     sepolia: "ETH_TEST5", // ETH_TEST is deprecated and gets refused by fireblocks
+    "avalanche-fuji": "AVAXTEST", // TODO
     // polygon: "polygon", // TODO
-    // avalanche: "avalanche", // TODO
     // arbitrum: "arbitrum", // TODO
 };
 class FireblocksSigner {
