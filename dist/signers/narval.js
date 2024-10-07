@@ -1,18 +1,10 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NarvalSigner = void 0;
+const signature_1 = require("@narval-xyz/armory-sdk/signature");
 const armory_sdk_1 = require("@narval-xyz/armory-sdk");
 const assert_1 = __importDefault(require("assert"));
 const uuid_1 = require("uuid");
@@ -30,6 +22,10 @@ const getPrivateKey = (key) => {
 const userPrivateKey = getPrivateKey("ARMORY_USER_PRIVATE_KEY");
 const addr = (0, accounts_1.privateKeyToAddress)(userPrivateKey);
 const userJwk = (0, armory_sdk_1.privateKeyToJwk)(userPrivateKey, "ES256K", addr);
+const accountId = `eip155:eoa:${addr}`;
+const unsafeSignerPrivateKey = process.env.ARMORY_USER_PRIVATE_KEY;
+const signerAddress = (0, accounts_1.privateKeyToAddress)(unsafeSignerPrivateKey);
+const signerJwk = (0, signature_1.secp256k1PrivateKeyToJwk)(unsafeSignerPrivateKey, signerAddress); // Need to pass the address as kid since my Datastore only references the address, not the whole pubkey.
 const entityStorePrivateKey = getPrivateKey("ARMORY_ENTITY_STORE_PRIVATE_KEY");
 const policyStorePrivateKey = getPrivateKey("ARMORY_POLICY_STORE_PRIVATE_KEY");
 class NarvalSigner {
@@ -67,49 +63,69 @@ class NarvalSigner {
             },
         });
     }
-    createWallet(userId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return "narval"; // TODO: create a Narval user per cryptopod user registered, and limit their access to their own wallets?
-        });
+    async createWallet(userId) {
+        return "narval"; // TODO: create a Narval user per cryptopod user registered, and limit their access to their own wallets?
     }
-    createAccount(_1, // unused, all cryptopod users use the same narval user
+    async createAccount(_1, // unused, all cryptopod users use the same narval user
     _2 // unused, narval wallets provide only evm string anyway
     ) {
-        return __awaiter(this, void 0, void 0, function* () {
-            console.log("narval - requesting wallet create access token");
-            // Request access to create wallet and account.
-            const walletCreateAccessToken = yield this.authClient.requestAccessToken({
-                action: armory_sdk_1.Action.GRANT_PERMISSION,
-                resourceId: "vault",
-                nonce: (0, uuid_1.v4)(),
-                permissions: [armory_sdk_1.Permission.WALLET_CREATE],
-            });
-            console.log("narval - generating wallet");
-            const { account } = yield this.vaultClient.generateWallet({
-                accessToken: walletCreateAccessToken,
-            });
-            const { data: entity } = yield this.entityStoreClient.fetch();
-            const newEntities = Object.assign(Object.assign({}, entity), { accounts: [
-                    ...(entity.accounts || []),
-                    {
-                        id: account.id,
-                        address: account.address,
-                        accountType: "eoa",
-                    },
-                ] });
-            yield this.entityStoreClient.signAndPush(newEntities);
-            return { address: account.address };
+        console.log("narval - requesting wallet create access token");
+        // Request access to create wallet and account.
+        const walletCreateAccessToken = await this.authClient.requestAccessToken({
+            action: armory_sdk_1.Action.GRANT_PERMISSION,
+            resourceId: "vault",
+            nonce: (0, uuid_1.v4)(),
+            permissions: [armory_sdk_1.Permission.WALLET_CREATE],
         });
+        console.log("narval - generating wallet");
+        const { account } = await this.vaultClient.generateWallet({
+            accessToken: walletCreateAccessToken,
+        });
+        const { data: entity } = await this.entityStoreClient.fetch();
+        const newEntities = {
+            ...entity,
+            accounts: [
+                ...(entity.accounts || []),
+                {
+                    id: account.id,
+                    address: account.address,
+                    accountType: "eoa",
+                },
+            ],
+        };
+        await this.entityStoreClient.signAndPush(newEntities);
+        return { address: account.address };
     }
-    sign(transaction) {
-        return __awaiter(this, void 0, void 0, function* () {
-            throw new Error("Not implemented");
-        });
+    // TODO
+    async sign(transaction) {
+        const request = {
+            resourceId: accountId,
+            action: armory_sdk_1.Action.SIGN_MESSAGE,
+            nonce: (0, uuid_1.v4)(),
+            //message: transaction,
+            message: "Narval Testing",
+        };
+        try {
+            console.log("\n\n Authorization Request");
+            const accessToken = await this.authClient.requestAccessToken(request);
+            console.log("\n\n Authorization Response:", accessToken);
+            if (accessToken) {
+                console.log("\n\n🔏 Sending signing request...");
+                const { signature } = await this.vaultClient.sign({
+                    accessToken,
+                    data: request,
+                });
+                console.log("\n\n✅ Signature:", signature);
+                return signature;
+            }
+        }
+        catch (error) {
+            console.error(error);
+            throw new Error("Narval signing error");
+        }
     }
-    getSupportedAssets() {
-        return __awaiter(this, void 0, void 0, function* () {
-            throw new Error("Not implemented");
-        });
+    async getSupportedAssets() {
+        throw new Error("Not implemented");
     }
 }
 exports.NarvalSigner = NarvalSigner;

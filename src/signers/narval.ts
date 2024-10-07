@@ -1,3 +1,7 @@
+import {
+  secp256k1PrivateKeyToJwk,
+  SigningAlg,
+} from "@narval-xyz/armory-sdk/signature";
 import type { SIGNER, Signer } from ".";
 
 import {
@@ -10,6 +14,7 @@ import {
   VaultClient,
   buildSignerEip191,
   privateKeyToJwk,
+  Request,
 } from "@narval-xyz/armory-sdk";
 import assert from "assert";
 import { v4 as uuid } from "uuid";
@@ -31,6 +36,14 @@ const getPrivateKey = (key: string) => {
 const userPrivateKey = getPrivateKey("ARMORY_USER_PRIVATE_KEY");
 const addr = privateKeyToAddress(userPrivateKey);
 const userJwk = privateKeyToJwk(userPrivateKey, "ES256K", addr);
+const accountId = `eip155:eoa:${addr}`;
+
+const unsafeSignerPrivateKey = process.env.ARMORY_USER_PRIVATE_KEY as Hex;
+const signerAddress = privateKeyToAddress(unsafeSignerPrivateKey);
+const signerJwk = secp256k1PrivateKeyToJwk(
+  unsafeSignerPrivateKey,
+  signerAddress
+); // Need to pass the address as kid since my Datastore only references the address, not the whole pubkey.
 
 const entityStorePrivateKey = getPrivateKey("ARMORY_ENTITY_STORE_PRIVATE_KEY");
 const policyStorePrivateKey = getPrivateKey("ARMORY_POLICY_STORE_PRIVATE_KEY");
@@ -116,8 +129,36 @@ export class NarvalSigner implements Signer {
     return { address: account.address };
   }
 
-  async sign(transaction: unknown): Promise<string> {
-    throw new Error("Not implemented");
+  // TODO
+  async sign(transaction: string): Promise<string> {
+    const request: Request = {
+      resourceId: accountId,
+      action: Action.SIGN_MESSAGE,
+      nonce: uuid(),
+      //message: transaction,
+      message: "Narval Testing",
+    };
+
+    try {
+      console.log("\n\n Authorization Request");
+      const accessToken = await this.authClient.requestAccessToken(request);
+      console.log("\n\n Authorization Response:", accessToken);
+
+      if (accessToken) {
+        console.log("\n\n🔏 Sending signing request...");
+
+        const { signature } = await this.vaultClient.sign({
+          accessToken,
+          data: request,
+        });
+
+        console.log("\n\n✅ Signature:", signature);
+        return signature;
+      }
+    } catch (error) {
+      console.error(error);
+      throw new Error("Narval signing error");
+    }
   }
 
   async getSupportedAssets(): Promise<any> {

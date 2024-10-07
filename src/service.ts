@@ -2,6 +2,8 @@ import { Account, Wallet } from "@prisma/client";
 import { prisma } from "./prisma_client";
 import { SIGNERS, type SIGNER } from "./signers";
 
+const ADAMIK_API_URL = "https://api.adamik.io/api";
+
 const WALLETS_SIGNERS: { chainId: string; signer: SIGNER }[] = [
   {
     chainId: "sepolia",
@@ -39,7 +41,7 @@ const WALLETS_SIGNERS: { chainId: string; signer: SIGNER }[] = [
 
 async function getBalance(address: string, chainId: string): Promise<string> {
   const balance_response = await fetch(
-    "https://api.adamik.io/api/account/state?include=native",
+    ADAMIK_API_URL + "/account/state?include=native",
     {
       headers: {
         Authorization: process.env.ADAMIK_API_KEY,
@@ -50,7 +52,7 @@ async function getBalance(address: string, chainId: string): Promise<string> {
         chainId,
         accountId: address,
       }),
-    },
+    }
   );
 
   let balance =
@@ -58,16 +60,13 @@ async function getBalance(address: string, chainId: string): Promise<string> {
       ? (await balance_response.json()).balances.native.total
       : 0;
 
-  const chain_response = await fetch(
-    `https://api.adamik.io/api/chains/${chainId}`,
-    {
-      headers: {
-        Authorization: process.env.ADAMIK_API_KEY,
-        "Content-Type": "application/json",
-      },
-      method: "GET",
+  const chain_response = await fetch(ADAMIK_API_URL + `/chains/${chainId}`, {
+    headers: {
+      Authorization: process.env.ADAMIK_API_KEY,
+      "Content-Type": "application/json",
     },
-  );
+    method: "GET",
+  });
 
   const decimals =
     chain_response.status === 200
@@ -82,7 +81,7 @@ async function getBalance(address: string, chainId: string): Promise<string> {
 }
 
 export async function getAccounts(
-  userId: string,
+  userId: string
 ): Promise<
   { chainId: string; address: string; balance: string; provider: SIGNER }[]
 > {
@@ -111,8 +110,8 @@ export async function getAccounts(
             provider: provider as SIGNER,
             balance: await getBalance(account.address, account.chainId),
           };
-        }),
-      ),
+        })
+      )
     );
 }
 
@@ -158,7 +157,7 @@ export async function registerUser(userId: string): Promise<void> {
       console.log(`wallet ${wallet.id} registered for user ${wallet.userName}`);
     } else {
       console.log(
-        `wallet ${wallet.id} already registered for user ${wallet.userName}`,
+        `wallet ${wallet.id} already registered for user ${wallet.userName}`
       );
     }
 
@@ -184,11 +183,11 @@ export async function registerUser(userId: string): Promise<void> {
         },
       });
       console.log(
-        `account ${account_created.chainId} registered for user ${account_created.userName}`,
+        `account ${account_created.chainId} registered for user ${account_created.userName}`
       );
     } else {
       console.log(
-        `account ${account.chainId} already registered for user ${account.userName}`,
+        `account ${account.chainId} already registered for user ${account.userName}`
       );
     }
   }
@@ -197,9 +196,10 @@ export async function registerUser(userId: string): Promise<void> {
 export async function sign(
   userId: string,
   chainId: string,
-  transaction: unknown,
+  transaction: unknown
 ): Promise<string> {
-  const signer = SIGNERS["fireblocks"]; // TODO pick the right one
+  //const signer = SIGNERS["fireblocks"]; // TODO pick the right one
+  const signer = SIGNERS["narval"]; // TODO pick the right one
 
   /*
   const { provider } = await prisma.wallet.findUnique({

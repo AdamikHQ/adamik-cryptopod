@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -16,17 +7,18 @@ require("dotenv/config");
 const express_1 = __importDefault(require("express"));
 const service_1 = require("./service");
 const ts_sdk_1 = require("@fireblocks/ts-sdk");
+//import { createHash } from "crypto";
 const app = (0, express_1.default)();
 // enable JSON body parser
 app.use(express_1.default.json());
 app.get("/", (req, res) => {
     res.send("Hello World!");
 });
-app.post("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post("/users", async (req, res) => {
     try {
         const userId = req.body.id;
-        yield (0, service_1.registerUser)(userId);
-        const accounts = yield (0, service_1.getAccounts)(userId);
+        await (0, service_1.registerUser)(userId);
+        const accounts = await (0, service_1.getAccounts)(userId);
         res.json(accounts);
     }
     catch (error) {
@@ -38,13 +30,32 @@ app.post("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         console.error(error);
         res.status(500).json({ error });
     }
-}));
-app.post("/transactions", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+});
+// TODO
+app.post("/transactions", async (req, res) => {
     try {
         const userId = req.body.id; // TODO, use this to get the Fireblocks/Narval id
         const chainId = "ETH_TEST5"; // TODO Get from request
-        const message = "0x02f283aa36a780843b9aca0085383cd6b41f82520894d9cf97a8eb01d27b1f5a8809273137d92758c31287038d7ea4c6800080c0";
-        console.log("XXX - /sign - userId:", userId);
+        const message = "0x02ed83aa36a780843b9aca008535636c237e82520894d9cf97a8eb01d27b1f5a8809273137d92758c3128203e880c0"; // TODO get from request
+        //const hash = createHash("sha256").update(message, "utf8").digest();
+        //const content = createHash("sha256").update(hash).digest("hex");
+        /*
+        const message = {
+          to: "0x8bc6922Eb94e4858efaF9F433c35Bc241F69e8a6" as `0x${string}`,
+          value: 1n,
+          from: "0x8bc6922Eb94e4858efaF9F433c35Bc241F69e8a6" as `0x${string}`,
+          chainId: 8453,
+          nonce: 8,
+          type: "eip1559" as "eip1559",
+          maxPriorityFeePerGas: 1000000n,
+          maxFeePerGas: 4144765n,
+          gas: 21000n,
+          authorizationList: undefined as any,
+        };
+    
+        const content = keccak256(serializeTransaction(message)).slice(2);
+        */
+        //console.log("XXX - /sign - userId:", userId);
         const transaction = {
             assetId: chainId,
             operation: ts_sdk_1.TransactionOperation.Raw,
@@ -58,15 +69,14 @@ app.post("/transactions", (req, res) => __awaiter(void 0, void 0, void 0, functi
                     algorithm: "MPC_ECDSA_SECP256K1", // Optional
                     messages: [
                         {
-                            content: message, // TODO
+                            content: message,
                             //derivationPath: [44, 0, 0, 0, 0], // TODO ?
                         },
                     ],
                 },
             },
         };
-        const signature = yield (0, service_1.sign)(userId, chainId, transaction);
-        // FIXME DEBUG TBR
+        const signature = await (0, service_1.sign)(userId, chainId, transaction);
         console.log("XXX - signature:", signature);
         res.json(signature);
     }
@@ -74,11 +84,10 @@ app.post("/transactions", (req, res) => __awaiter(void 0, void 0, void 0, functi
         console.log("XXX - error:", error.toString());
         res.status(500).json({ error });
     }
-    // TODO
-}));
-app.get("/assets", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const supportedAssets = yield (0, service_1.getSupportedAssets)();
+});
+app.get("/assets", async (req, res) => {
+    const supportedAssets = await (0, service_1.getSupportedAssets)();
     res.json(supportedAssets);
-}));
+});
 exports.default = app;
 //# sourceMappingURL=index.js.map
